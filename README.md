@@ -53,7 +53,9 @@ set itself as default (UCPD protection).
 
 ## Configure
 `%APPDATA%\ProfileRouter\config.toml` (TOML, comments allowed). See
-[`config.example.toml`](config.example.toml).
+[`config.example.toml`](config.example.toml). Running `--config` refreshes an
+auto-maintained comment block at the top of the file listing this machine's
+Chrome profiles, so you never have to run `--list-profiles` to write a rule.
 
 ```toml
 default = "Personal"        # fallback profile for unmatched links
@@ -62,13 +64,24 @@ default = "Personal"        # fallback profile for unmatched links
 domain = "*.nwpipe.com"     # apex + any subdomain
 profile = "Work"
 
+# Optional path matching — route two GitHub orgs to different profiles:
 [[rule]]
 domain = "github.com"
+path = "/TeeJS/*"           # matches /TeeJS and anything under it
 profile = "Dev"
+
+[[rule]]
+domain = "github.com"       # catch-all for other github.com links
+profile = "Personal"
 ```
 
 `profile` may be a Chrome display name ("Work") or a folder name ("Profile 1",
 "Default"). Rules are checked top to bottom; the first match wins.
+
+- **domain**: exact host or `*.` wildcard (apex + subdomains).
+- **path** (optional): `/prefix/*` or `/prefix*`. Only the *clicked link's* path
+  is seen — redirects and link-shorteners hide the real destination. List path
+  rules before a plain domain rule for the same host.
 
 ## Commands
 | Command | Does |

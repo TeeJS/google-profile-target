@@ -1,7 +1,8 @@
 # Profile Router config.
 # Clicked links are matched against the rules below, top to bottom; first match wins.
-# `profile` is the Chrome profile's display name (run `profile-router --list-profiles`)
-# or its folder name ("Profile 1", "Default"). Unmatched links use `default`.
+# `profile` is the Chrome profile's display name or its folder name. Run
+# `profile-router --config` and it lists this machine's profiles in a comment
+# block at the very top of your live config. Unmatched links use `default`.
 #
 # Copy this to:  %APPDATA%\ProfileRouter\config.toml
 # (Profile Router also writes a starter file there on first run.)
@@ -13,17 +14,27 @@ default = "Default"
 # chrome_path = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
 
 # --- Rules ---------------------------------------------------------------
-# domain: exact host ("github.com") or wildcard ("*.example.com" matches the
-#         apex example.com and any subdomain).
+# domain: exact host ("github.com") or wildcard ("*.example.com" = apex + subs).
+# path:   optional. Match the URL path too. "/TeeJS/*" matches /TeeJS and
+#         anything under it; a plain "/TeeJS*" is a prefix match. Only the
+#         clicked link's path is seen (redirects / link-shorteners hide the real
+#         destination). Put path rules BEFORE a plain domain rule for the host.
 
 [[rule]]
 domain = "*.nwpipe.com"
 profile = "Work"
 
+# Two GitHub orgs -> two profiles, then a catch-all for bare github.com links.
 [[rule]]
 domain = "github.com"
+path = "/TeeJS/*"
 profile = "Dev"
 
 [[rule]]
-domain = "mail.google.com"
+domain = "github.com"
+path = "/tschmitznwp/*"
+profile = "Work"
+
+[[rule]]
+domain = "github.com"
 profile = "Personal"

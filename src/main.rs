@@ -116,10 +116,15 @@ fn cmd_dry_run(url: Option<&str>) {
     let dir = chrome::resolve_profile_dir(profile);
     out(&format!("URL      : {url}"));
     out(&format!("Host     : {}", matcher::host_of(url).unwrap_or_else(|| "<none>".into())));
-    out(&format!(
-        "Matched  : {}",
-        rule.map(|r| r.domain.as_str()).unwrap_or("<no rule - using default>")
-    ));
+    out(&format!("Path     : {}", matcher::path_of(url).unwrap_or_else(|| "<none>".into())));
+    let matched = match rule {
+        Some(r) => match &r.path {
+            Some(p) => format!("domain={} path={p}", r.domain),
+            None => format!("domain={}", r.domain),
+        },
+        None => "<no rule - using default>".to_string(),
+    };
+    out(&format!("Matched  : {matched}"));
     out(&format!("Profile  : {profile}"));
     out(&format!(
         "Directory: {}",
@@ -129,8 +134,9 @@ fn cmd_dry_run(url: Option<&str>) {
 
 fn cmd_config() {
     let path = config::config_path();
-    // Ensure it exists so there is something to reveal.
+    // Ensure it exists, then refresh the auto profile-list comment block.
     let _ = config::load();
+    config::refresh_profiles_in_file();
     out(&format!("Config file: {}", path.display()));
     let _ = Command::new("explorer")
         .arg(format!("/select,{}", path.display()))
