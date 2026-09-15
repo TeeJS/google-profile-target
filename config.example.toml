@@ -1,0 +1,29 @@
+# Profile Router config.
+# Clicked links are matched against the rules below, top to bottom; first match wins.
+# `profile` is the Chrome profile's display name (run `profile-router --list-profiles`)
+# or its folder name ("Profile 1", "Default"). Unmatched links use `default`.
+#
+# Copy this to:  %APPDATA%\ProfileRouter\config.toml
+# (Profile Router also writes a starter file there on first run.)
+
+# Fallback profile for links that match no rule. "Default" is always valid.
+default = "Default"
+
+# Optional: force a specific chrome.exe. Auto-detected if omitted.
+# chrome_path = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+
+# --- Rules ---------------------------------------------------------------
+# domain: exact host ("github.com") or wildcard ("*.example.com" matches the
+#         apex example.com and any subdomain).
+
+[[rule]]
+domain = "*.nwpipe.com"
+profile = "Work"
+
+[[rule]]
+domain = "github.com"
+profile = "Dev"
+
+[[rule]]
+domain = "mail.google.com"
+profile = "Personal"

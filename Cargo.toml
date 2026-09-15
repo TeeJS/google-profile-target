@@ -1,0 +1,33 @@
+[package]
+name = "profile-router"
+version = "0.1.0"
+edition = "2021"
+description = "Route clicked links to the matching Chrome profile by domain"
+license = "MIT"
+repository = "https://github.com/TeeJS/google-profile-target"
+
+[[bin]]
+name = "profile-router"
+path = "src/main.rs"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+toml = "0.8"
+url = "2"
+winreg = "0.52"
+
+[dependencies.windows-sys]
+version = "0.59"
+features = [
+    "Win32_Foundation",
+    "Win32_System_Console",
+    "Win32_System_SystemInformation",
+]
+
+[profile.release]
+lto = true
+strip = true
+opt-level = "s"
+panic = "abort"
+codegen-units = 1
